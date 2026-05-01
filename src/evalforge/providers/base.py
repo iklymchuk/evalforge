@@ -1,7 +1,7 @@
 """Abstract base class for LLM providers."""
 
 from abc import ABC, abstractmethod
-from .models import PromptRun, ProviderResponse
+from evalforge.models import PromptRun, ProviderResponse
 
 class Provider(ABC):
     """All providers conform to this interface."""
