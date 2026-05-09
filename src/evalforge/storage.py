@@ -1,5 +1,12 @@
 """SQLite persistence for prompt runs."""
 
+import sqlite3
+import json
+import uuid
+from datetime import datetime
+from pathlib import Path
+from evalforge.models import ProviderResponse
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS prompt_runs (
     id TEXT PRIMARY KEY,
@@ -12,7 +19,7 @@ CREATE TABLE IF NOT EXISTS prompt_runs (
     input_tokens INTEGER NOT NULL,
     output_tokens INTEGER NOT NULL,
     latency_ms INTEGER NOT NULL,
-    raw_response TEXT NOT NULL,
+    raw_response TEXT NOT NULL
 )
 """
     
@@ -35,10 +42,10 @@ class RunStore:
                 (
                     run_id,
                     datetime.utcnow().isoformat(),
-                    system_prompt,
-                    user_prompt,
                     response.provider,
-                    response.model, 
+                    response.model,
+                    user_prompt,
+                    system_prompt,
                     response.text,
                     response.usage.input_tokens,
                     response.usage.output_tokens,

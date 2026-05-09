@@ -32,7 +32,7 @@ class OpenAIProvider(Provider):
             "messages": [{"role": "user", "content": user_prompt}]
         }
         if system_prompt:
-            kwargs["system"] = system_prompt
+            kwargs["messages"] = [{"role": "system", "content": system_prompt}] + kwargs["messages"]
 
         response = self._client.chat.completions.create(**kwargs)
         latency_ms = int((time.perf_counter() - start) * 1000)

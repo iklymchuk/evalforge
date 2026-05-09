@@ -219,3 +219,6 @@ __marimo__/
 
 # Test
 test.py
+
+# EvalForge runtime
+evalforge.db
