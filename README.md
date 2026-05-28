@@ -13,7 +13,7 @@ A CLI tool for comparing LLM responses across providers side-by-side. Send one p
 Requires Python 3.11+.
 
 ```bash
-git clone <repo>
+git clone https://github.com/iklymchuk/evalforge.git
 cd evalforge
 python -m venv venv && source venv/bin/activate
 pip install -e .
@@ -50,10 +50,3 @@ Output:
 │ together  │ meta-llama/Meta-Llama.. │ Bugs hide...   │ 28 / 35         │ 654          │
 └───────────┴─────────────────────────┴────────────────┴─────────────────┴──────────────┘
 ```
-
-## Coming next
-
-- `evalforge history` — browse past runs stored in `evalforge.db`
-- Per-provider model override flags (`--openai-model`, `--anthropic-model`, etc.)
-- Scoring / grading runs against expected outputs
-- Export results to CSV or JSON
