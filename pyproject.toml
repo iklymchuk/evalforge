@@ -17,9 +17,19 @@
    [project.scripts]
    evalforge = "evalforge.cli:main"
 
+   [project.optional-dependencies]
+   dev = [
+       "pytest>=8.0.0",
+   ]
+
    [build-system]
    requires = ["setuptools>=68"]
    build-backend = "setuptools.build_meta"
 
    [tool.setuptools.packages.find]
    where = ["src"]
+
+   [tool.pytest.ini_options]
+   markers = [
+       "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+   ]
