@@ -1,0 +1,32 @@
+name: haiku_writer
+version: 1
+description: "Writes haiku on a given topic in a specified style."
+author: "iklymchuk"
+created: 2026-05-31
+tags: [creative-writing, structured-output]
+
+defaults:
+  provider: "anthropic"
+  model: "claude-haiku-4-5-20251001"
+  temperature: 0.7
+  max_tokens: 256
+
+system_prompt: |
+  You are a poet who writes traditional Japanese haiku.
+  A haiku is a three lines following a 5, 7, 5 syllable pattern.
+  Always count syllables carefully before responding.
+  
+user_prompt: |
+  Write a haiku about {topic}.
+  Style: {{ style | default('contemplative') }}
+  
+variables:
+  - name: topic
+    type: string
+    required: true
+    description: "The subject of the haiku."
+  - name: style
+    type: string
+    required: false
+    default: "contemplative"
+    description: "The tonal style - contemplative, humorous, romantic, philosophical, modern, etc."  
