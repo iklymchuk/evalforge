@@ -2,8 +2,9 @@
 
 from pathlib import Path
 from typing import Any
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, StrictUndefined, TemplateError
 from .schema import PromptSpec
+import yaml
 
 class PromptRenderError(Exception):
     """Raised when prompt rendering fails."""

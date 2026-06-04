@@ -17,7 +17,7 @@ system_prompt: |
   Always count syllables carefully before responding.
   
 user_prompt: |
-  Write a haiku about {topic}.
+  Write a haiku about {{ topic }}.
   Style: {{ style | default('contemplative') }}
   
 variables:

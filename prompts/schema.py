@@ -14,7 +14,7 @@ class PromptVariable(BaseModel):
 
 class PromptDefaults(BaseModel):
     """Default model and sampling parameters for a prompt."""
-    provider: str = "anthropic  "
+    provider: str = "anthropic"
     model: str | None = None
     temperature: float = 1.0
     max_tokens: int = 1024
