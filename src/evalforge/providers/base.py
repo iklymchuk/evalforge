@@ -3,19 +3,20 @@
 from abc import ABC, abstractmethod
 from evalforge.models import PromptRun, ProviderResponse
 
+
 class Provider(ABC):
     """All providers conform to this interface."""
 
-    name: str # e.g. "openai", "anthropic"
-    
+    name: str  # e.g. "openai", "anthropic"
+
     @abstractmethod
     def complete(
-        self, 
+        self,
         user_prompt: str,
         system_prompt: str | None = None,
         model: str | None = None,
         max_tokens: int = 1024,
         temperature: float = 1.0,
-        ) -> ProviderResponse:
+    ) -> ProviderResponse:
         """Synchronous completion. Returs normalized ProviderResponse."""
         ...
