@@ -147,3 +147,49 @@ def run_prompt(
         f"[dim]Latency: {response.latency_ms} ms · Tokens: {response.usage.input_tokens} / {response.usage.output_tokens}[/dim]\n"
     )
     console.print(response.text)
+
+
+@main.command(name="compare-prompts")
+@click.argument("name")
+@click.option("--v1", "version1", type=int, required=True, help="First version.")
+@click.option("--v2", "version2", type=int, required=True, help="Second version.")
+@click.option("--var", "variables", multiple=True, help="Variable as key=value.")
+@click.option("--provider", default=None)
+def compare_prompts(name, version1, version2, variables, provider):
+    """Run two versions of the same prompt side-by-side."""
+    registry = PromptRegistry()
+    t1 = registry.get(name, version1)
+    t2 = registry.get(name, version2)
+
+    var_dict = {}
+    for v in variables:
+        k, val = v.split("=", 1)
+        var_dict[k.strip()] = val.strip()
+
+    table = Table(title=f"Prompt Comparison: {name} v{version1} vs v{version2}")
+    table.add_column("Version")
+    table.add_column("Response", overflow="fold")
+    table.add_column("Tokens", justify="right")
+    table.add_column("Latency", justify="right")
+
+    store = RunStore()
+    for t in (t1, t2):
+        system, user = t.render(**var_dict)
+        provider_name = provider or t.spec.defaults.provider
+        p = PROVIDERS[provider_name]
+        r = p.complete(
+            user_prompt=user,
+            system_prompt=system,
+            model=t.spec.defaults.model,
+            max_tokens=t.spec.defaults.max_tokens,
+            temperature=t.spec.defaults.temperature,
+        )
+        store.save_prompt_run(t.spec.name, t.spec.version, system, user, r)
+        table.add_row(
+            f"v{t.spec.version}",
+            r.text[:300] + ("..." if len(r.text) > 300 else ""),
+            f"{r.usage.input_tokens}/{r.usage.output_tokens}",
+            f"{r.latency_ms}ms",
+        )
+
+    console.print(table)
