@@ -8,9 +8,10 @@ import time
 
 load_dotenv()
 
+
 class TogetherProvider(Provider):
     name = "together"
-    default_model = "meta-llama/Meta-Llama-3-8B-Instruct-Lite" # meta-llama/Llama-3.3-70B-Instruct-Turbo
+    default_model = "meta-llama/Meta-Llama-3-8B-Instruct-Lite"  # meta-llama/Llama-3.3-70B-Instruct-Turbo
 
     def __init__(self):
         self._client = Together()
@@ -28,10 +29,12 @@ class TogetherProvider(Provider):
             "model": model or self.default_model,
             "max_tokens": max_tokens,
             "temperature": temperature,
-            "messages": [{"role": "user", "content": user_prompt}]
+            "messages": [{"role": "user", "content": user_prompt}],
         }
         if system_prompt:
-            kwargs["messages"] = [{"role": "system", "content": system_prompt}] + kwargs["messages"]
+            kwargs["messages"] = [
+                {"role": "system", "content": system_prompt}
+            ] + kwargs["messages"]
 
         response = self._client.chat.completions.create(**kwargs)
         latency_ms = int((time.perf_counter() - start) * 1000)

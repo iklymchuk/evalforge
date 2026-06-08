@@ -10,13 +10,10 @@ response = client.chat.completions.create(
     messages=[
         {
             "role": "system",
-            "content": "You are a helpful assistant who responds in haiku."
+            "content": "You are a helpful assistant who responds in haiku.",
         },
-        {
-            "role": "user",
-            "content": "Explain what an LLM is."
-        }
-    ]   
+        {"role": "user", "content": "Explain what an LLM is."},
+    ],
 )
 print(response.choices[0].message.content)
 print(f"\nUsage: {response.usage}")

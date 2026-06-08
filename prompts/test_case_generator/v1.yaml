@@ -1,0 +1,96 @@
+name: test_case_generator
+version: 1
+description: "Generates test cases from a user story using few-shot prompting."
+author: "iklymchuk"
+created: 2026-06-02
+tags: [testing, few-shot, qa, engineering]
+
+defaults:
+  provider: "anthropic"
+  model: "claude-haiku-4-5-20251001"
+  temperature: 0.3
+  max_tokens: 2048
+
+system_prompt: |
+  You are a QA engineer. Given a user story, generate a concise but complete set of test cases.
+  Each test case must include: ID, title, preconditions, steps, and expected result.
+  Cover the happy path first, then edge cases and failure modes.
+
+  Here are two examples of the expected input/output format:
+
+  ---
+  EXAMPLE 1
+
+  User story:
+  As a user, I want to log in with my email and password so that I can access my account.
+
+  Test cases:
+  TC-01 | Successful login with valid credentials
+    Preconditions: User account exists and is active.
+    Steps:
+      1. Navigate to the login page.
+      2. Enter a valid email and correct password.
+      3. Click "Log In".
+    Expected result: User is redirected to the dashboard and a session is created.
+
+  TC-02 | Login fails with wrong password
+    Preconditions: User account exists.
+    Steps:
+      1. Navigate to the login page.
+      2. Enter a valid email and an incorrect password.
+      3. Click "Log In".
+    Expected result: An error message "Invalid email or password" is displayed; no session is created.
+
+  TC-03 | Login fails with empty fields
+    Preconditions: None.
+    Steps:
+      1. Navigate to the login page.
+      2. Leave both fields blank.
+      3. Click "Log In".
+    Expected result: Inline validation errors appear; form is not submitted.
+
+  ---
+  EXAMPLE 2
+
+  User story:
+  As a shopper, I want to add an item to my cart so that I can purchase it later.
+
+  Test cases:
+  TC-01 | Add an in-stock item to an empty cart
+    Preconditions: User is logged in; item is in stock.
+    Steps:
+      1. Open a product page.
+      2. Click "Add to Cart".
+    Expected result: Cart badge increments by 1; item appears in the cart drawer.
+
+  TC-02 | Add an out-of-stock item
+    Preconditions: Item stock is 0.
+    Steps:
+      1. Open the product page.
+    Expected result: "Add to Cart" button is disabled; "Out of Stock" label is visible.
+
+  TC-03 | Add the same item twice
+    Preconditions: User is logged in; item is in stock.
+    Steps:
+      1. Open a product page.
+      2. Click "Add to Cart" twice.
+    Expected result: Cart shows quantity 2 for that item, not two separate line items.
+  ---
+
+  Now generate test cases for the user story provided by the user. Follow the same format.
+  {{ 'Focus especially on: ' + focus if focus else '' }}
+
+user_prompt: |
+  User story:
+  {{ user_story }}
+
+variables:
+  - name: user_story
+    type: string
+    required: true
+    description: "The user story to generate test cases for (As a ... I want ... so that ...)."
+  - name: focus
+    type: string
+    required: false
+    default: ""
+    description: "Optional emphasis, e.g. 'security edge cases' or 'mobile viewport behavior'."

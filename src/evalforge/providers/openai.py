@@ -8,6 +8,7 @@ import time
 
 load_dotenv()
 
+
 class OpenAIProvider(Provider):
     name = "openai"
     default_model = "gpt-4o-mini"
@@ -16,23 +17,25 @@ class OpenAIProvider(Provider):
         self._client = OpenAI()
 
     def complete(
-        self, 
+        self,
         user_prompt: str,
         system_prompt: str | None = None,
         model: str | None = None,
         max_tokens: int = 1024,
         temperature: float = 1.0,
-        ) -> ProviderResponse:
+    ) -> ProviderResponse:
 
         start = time.perf_counter()
         kwargs = {
             "model": model or self.default_model,
             "max_tokens": max_tokens,
             "temperature": temperature,
-            "messages": [{"role": "user", "content": user_prompt}]
+            "messages": [{"role": "user", "content": user_prompt}],
         }
         if system_prompt:
-            kwargs["messages"] = [{"role": "system", "content": system_prompt}] + kwargs["messages"]
+            kwargs["messages"] = [
+                {"role": "system", "content": system_prompt}
+            ] + kwargs["messages"]
 
         response = self._client.chat.completions.create(**kwargs)
         latency_ms = int((time.perf_counter() - start) * 1000)

@@ -8,6 +8,7 @@ import time
 
 load_dotenv()
 
+
 class AnthropicProvider(Provider):
     name = "anthropic"
     default_model = "claude-haiku-4-5-20251001"
@@ -16,20 +17,20 @@ class AnthropicProvider(Provider):
         self._client = Anthropic()
 
     def complete(
-        self, 
+        self,
         user_prompt: str,
         system_prompt: str | None = None,
         model: str | None = None,
         max_tokens: int = 1024,
         temperature: float = 1.0,
-        ) -> ProviderResponse:
+    ) -> ProviderResponse:
 
         start = time.perf_counter()
         kwargs = {
             "model": model or self.default_model,
             "max_tokens": max_tokens,
             "temperature": temperature,
-            "messages": [{"role": "user", "content": user_prompt}]
+            "messages": [{"role": "user", "content": user_prompt}],
         }
         if system_prompt:
             kwargs["system"] = system_prompt
