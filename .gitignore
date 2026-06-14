@@ -222,3 +222,6 @@ test.py
 
 # EvalForge runtime
 evalforge.db
+
+# tmp
+_tmp/
