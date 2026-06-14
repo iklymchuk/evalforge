@@ -29,3 +29,45 @@ class PromptRun(BaseModel):
     system_prompt: str | None
     user_prompt: str
     response: ProviderResponse
+
+
+class BatchJob(BaseModel):
+    """One prompt to run against one provider"""
+
+    provider: Literal["openai", "anthropic", "together"]
+    user_prompt: str
+    system_prompt: str | None = None
+    model: str
+    max_tokens: int = 1024
+    temperature: float = 1.0
+
+
+class JobResult(BaseModel):
+    """Outcome of one job: either a response or an error string."""
+
+    job: BatchJob
+    response: ProviderResponse | None = None
+    error: str | None = None
+
+    @property
+    def ok(self) -> bool:
+        return self.response is not None
+
+
+class BatchResult(BaseModel):
+    """All outcomes for one batch, plus cnvenience aggregates."""
+
+    batch_id: str
+    results: list[JobResult]
+
+    @property
+    def succeeded(self) -> int:
+        return sum(1 for r in self.results if r.ok)
+
+    @property
+    def failed(self) -> int:
+        return sum(1 for r in self.results if not r.ok)
+
+    @property
+    def total_output_tokens(self) -> int:
+        return sum(r.response.usage.output_tokens for r in self.results if r.ok)
