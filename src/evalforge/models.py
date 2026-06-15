@@ -37,7 +37,7 @@ class BatchJob(BaseModel):
     provider: Literal["openai", "anthropic", "together"]
     user_prompt: str
     system_prompt: str | None = None
-    model: str
+    model: str | None = None
     max_tokens: int = 1024
     temperature: float = 1.0
 
